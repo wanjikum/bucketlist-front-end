@@ -1,26 +1,68 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { Formik, Form, Field } from "formik";
+import styled from "styled-components";
 
-function App() {
+const Container = styled.div`
+  height: 100vh;
+  width: 100%;
+`;
+
+const Header = styled.h1`
+  color: purple;
+`;
+
+const FieldWrapper = styled.div`
+  margin-bottom: 2.5rem;
+`;
+
+const Label = styled.label`
+  color: black;
+`;
+
+const Button = styled.button``;
+
+const initialValues = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  password: ""
+};
+
+const handleSubmit = values => {
+  setTimeout(() => {
+    alert(JSON.stringify(values, null, 2));
+  }, 1000);
+};
+
+const App = () => {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Container>
+      <Header>Welcome to the Bucketlist Application</Header>
+      <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+        {() => (
+          <Form>
+            <FieldWrapper>
+              <Label>First Name:</Label>
+              <Field name="firstName" type="text" />
+            </FieldWrapper>
+            <FieldWrapper>
+              <Label>Last Name:</Label>
+              <Field name="lastName" type="text" />
+            </FieldWrapper>
+            <FieldWrapper>
+              <Label>Email:</Label>
+              <Field name="email" type="email" />
+            </FieldWrapper>
+            <FieldWrapper>
+              <Label>Password:</Label>
+              <Field name="password" type="password" />
+            </FieldWrapper>
+            <Button type="submit">Sign Up</Button>
+          </Form>
+        )}
+      </Formik>
+    </Container>
   );
-}
+};
 
 export default App;
