@@ -2,6 +2,7 @@ export const RED = "#ED0025";
 export const CHARCOAL_GREY = "#313537";
 export const WHITE = "#FFFFFF";
 export const BLACK = "#000000";
+export const BLUE = "#0070BA";
 
 // Secondary colours
 export const CHERRY_RED = "#D40021";

@@ -1,266 +1,162 @@
 import React from "react";
-import {
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  FormFeedback,
-  FormText
-} from "reactstrap";
-// import { Formik, Form, Field, ErrorMessage } from "formik";
-// import styled from "styled-components";
-// import {
-//   Button,
-//   Form as ReactstrapForm,
-//   FormGroup,
-//   Label,
-//   Input,
-//   Col,
-//   Collapse,
-//   Navbar,
-//   NavbarToggler,
-//   NavbarBrand,
-//   Nav,
-//   NavItem,
-//   NavLink
-// } from "reactstrap";
-// import img from "../../public/images/beauti-1.jpg";
+import { Form } from "reactstrap";
+import { Formik, Field } from "formik";
+import styled from "styled-components";
 
-// const Container = styled.div`
-//   height: 100vh;
-//   width: 100%;
-//   display: flex;
-//   flex-direction: column;
-// `;
+import media from "../../utils/media";
+import { COOL_GREY, SILVER_GREY, WHITE_GREY } from "../../utils/colors";
 
-// const Header = styled.h1`
-//   color: black;
-// `;
+import img from "../../public/images/beauti-1.jpg";
 
-// const SubHeader = styled.h5`
-//   color: black;
-// `;
+import Button from "../../components/button/button";
+import CustomNav from "../../components/custom-nav/custom-nav";
+import CustomInputComponent from "../../components/custom-input/custom-input";
+import ButtonLink from "../../components/button/button-link";
 
-// const FieldWrapper = styled.div`
-//   margin-bottom: 0.5rem;
-// `;
+const Container = styled.div`
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
 
-// const InputLabel = styled(Label)`
-//   color: black;
-// `;
+  ${media.small`
+    background-image: url(${img});
+    background-size: cover;  
+  `};
+`;
 
-// const ErrorMessageWrapper = styled.div`
-//   margin-bottom: 1rem;
-//   color: red;
-// `;
+const FormContainer = styled.div`
+  margin-top: 1rem;
+  padding: 1.5rem;
 
-// const Container1 = styled.div`
-//   flex: 1;
-//   background-image: url(${img});
-//   background-size: cover;
-// `;
+  ${media.small`
+    align-self: center;
+    border: 1px solid ${SILVER_GREY};
+    margin-top: 4rem;
+    padding: 2.5rem;
+    width: 40rem;
+    background: ${WHITE_GREY};
+  `};
+`;
 
-// const Container2 = styled.div`
-//   flex: 1;
-//   background: white;
-//   padding: 2.5rem;
-// `;
+const Header = styled.h3`
+  margin-bottom: 1rem;
+`;
 
-// const ButtonWrapper = styled(Button)`
-//   margin-left: 1rem;
-//   color: white;
-//   background: white;
-// `;
+const SeparatorContainer = styled.div`
+  display: flex;
+  margin: 1rem 0;
+`;
 
-// const Container4 = styled.div`
-//   display: flex;
-//   height: 100%;
-// `;
+const Separator = styled.hr`
+  background: ${SILVER_GREY};
+  border: none;
+  flex: 1;
+  height: 1px;
+`;
 
-// class CustomNav extends React.Component {
-//   constructor(props) {
-//     super(props);
+const SeparatorText = styled.span`
+  font-size: 1rem;
+  color: ${COOL_GREY};
+  margin: 0 1rem;
 
-//     this.toggle = this.toggle.bind(this);
-//     this.state = {
-//       isOpen: false
-//     };
-//   }
-//   toggle() {
-//     this.setState({
-//       isOpen: !this.state.isOpen
-//     });
-//   }
-//   render() {
-//     return (
-//       <div>
-//         <Navbar color="light" light expand="md">
-//           <NavbarBrand href="/">Bucketlist</NavbarBrand>
-//           <NavbarToggler onClick={this.toggle} />
-//           <Collapse isOpen={this.state.isOpen} navbar>
-//             <Nav className="ml-auto" navbar>
-//               <NavItem>
-//                 <NavLink href="#">Sign In</NavLink>
-//               </NavItem>
-//               <NavItem>
-//                 <NavLink href="/sign-up/">Sign Up</NavLink>
-//               </NavItem>
-//             </Nav>
-//           </Collapse>
-//         </Navbar>
-//       </div>
-//     );
-//   }
-// }
+  ${media.large`
+    margin: 0 0.5rem;
+  `};
+`;
 
-// const initialValues = {
-//   email: "",
-//   password: ""
-// };
+const CustomButton = styled(Button)`
+  height: 3rem;
+  font-size: 1rem;
+`;
 
-// const handleSubmit = values => {
-//   setTimeout(() => {
-//     alert(JSON.stringify(values, null, 2));
-//   }, 1000);
-// };
+const SignUpLink = styled(ButtonLink)`
+  height: 3rem;
+  font-size: 1rem;
+  background: ${SILVER_GREY};
 
-// const validateEmail = value => {
-//   let error;
-//   if (!value) {
-//     error = "Required";
-//   } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
-//     error = "Invalid email address";
-//   } else if (value.length < 5) {
-//     error = "Email too short";
-//   } else if (value.length >= 30) {
-//     error = "Email too long";
-//   }
-//   return error;
-// };
+  ${media.small`
+    border-radius: 1rem;
+  `};
+`;
 
-// const validatePassword = value => {
-//   let error;
-//   if (!value) {
-//     error = "Required";
-//   } else if (value.length < 6) {
-//     error = "Password too short";
-//   } else if (value.length >= 15) {
-//     error = "Password too long";
-//   }
-//   return error;
-// };
-
-// const SignIn = () => {
-//   return (
-//     <Container>
-//       <CustomNav />
-//       <Container4>
-//         <Container1>This is the image</Container1>
-//         <Container2>
-//           <Header>Sign In</Header>
-//           <SubHeader>Already a member? Sign in here</SubHeader>
-//           <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-//             {({ values, errors }) => {
-//               console.log("matches>>>>", values);
-//               return (
-//                 <ReactstrapForm>
-//                   <Form>
-//                     <FormGroup>
-//                       <FieldWrapper>
-//                         <InputLabel sm={2} valid>Email:</InputLabel>
-//                         <Col md={6}>
-//                           <Field
-//                             name="email"
-//                             validate={validateEmail}
-//                             component={Input}
-//                           />
-//                         </Col>
-//                       </FieldWrapper>
-//                       <ErrorMessageWrapper>
-//                         <ErrorMessage name="email" />
-//                       </ErrorMessageWrapper>
-//                     </FormGroup>
-//                     <FormGroup>
-//                       <FieldWrapper>
-//                         <InputLabel sm={2}>Password:</InputLabel>
-//                         <Col md={6}>
-//                           <Field
-//                             name="password"
-//                             type="password"
-//                             validate={validatePassword}
-//                             component={Input}
-//                           />
-//                         </Col>
-//                       </FieldWrapper>
-//                       <ErrorMessageWrapper>
-//                         <ErrorMessage name="password" />
-//                       </ErrorMessageWrapper>
-//                     </FormGroup>
-//                     <ButtonWrapper>
-//                       <Button type="submit" size="lg" outline color="secondary">
-//                         Create Account
-//                       </Button>
-//                     </ButtonWrapper>
-//                   </Form>
-//                 </ReactstrapForm>
-//               );
-//             }}
-//           </Formik>
-//         </Container2>
-//       </Container4>
-//     </Container>
-//   );
-// };
-
-class Example extends React.Component {
-  render() {
-    return (
-      <Form>
-        <FormGroup>
-          <Label for="exampleEmail">Input without validation</Label>
-          <Input />
-          <FormFeedback>You will not be able to see this</FormFeedback>
-          <FormText>Example help text that remains unchanged.</FormText>
-        </FormGroup>
-        <FormGroup>
-          <Label for="exampleEmail">Valid input</Label>
-          <Input valid />
-          <FormFeedback valid>Sweet! that name is available</FormFeedback>
-          <FormText>Example help text that remains unchanged.</FormText>
-        </FormGroup>
-        <FormGroup>
-          <Label for="examplePassword">Invalid input</Label>
-          <Input invalid />
-          <FormFeedback>Oh noes! that name is already taken</FormFeedback>
-          <FormText>Example help text that remains unchanged.</FormText>
-        </FormGroup>
-        <FormGroup>
-          <Label for="exampleEmail">Input without validation</Label>
-          <Input />
-          <FormFeedback tooltip>You will not be able to see this</FormFeedback>
-          <FormText>Example help text that remains unchanged.</FormText>
-        </FormGroup>
-        <FormGroup>
-          <Label for="exampleEmail">Valid input</Label>
-          <Input valid />
-          <FormFeedback valid tooltip>
-            Sweet! that name is available
-          </FormFeedback>
-          <FormText>Example help text that remains unchanged.</FormText>
-        </FormGroup>
-        <FormGroup>
-          <Label for="examplePassword">Invalid input</Label>
-          <Input invalid />
-          <FormFeedback tooltip>
-            Oh noes! that name is already taken
-          </FormFeedback>
-          <FormText>Example help text that remains unchanged.</FormText>
-        </FormGroup>
-      </Form>
-    );
+const validateEmail = value => {
+  let error;
+  if (!value) {
+    error = "Required";
+  } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(value)) {
+    error = "Invalid email address";
+  } else if (value.length < 5) {
+    error = "Email too short";
+  } else if (value.length >= 30) {
+    error = "Email too long";
   }
-}
+  return error;
+};
 
-export default Example;
+const validatePassword = value => {
+  let error;
+  if (!value) {
+    error = "Required";
+  } else if (value.length < 6) {
+    error = "Password too short";
+  } else if (value.length >= 15) {
+    error = "Password too long";
+  }
+  return error;
+};
 
-// export default SignIn;
+const initialValues = {
+  email: "",
+  password: ""
+};
+
+const handleSubmit = values => {
+  setTimeout(() => {
+    alert(JSON.stringify(values, null, 2));
+  }, 1000);
+};
+
+const SignIn = () => {
+  return (
+    <Container>
+      <CustomNav />
+      <FormContainer>
+        <Header>Sign In With Bucketlists</Header>
+        <Formik
+          initialValues={initialValues}
+          onSubmit={handleSubmit}
+          render={props => (
+            <Form onSubmit={props.handleSubmit}>
+              <Field
+                type="email"
+                name="email"
+                id="email"
+                label="Email:"
+                validate={validateEmail}
+                component={CustomInputComponent}
+              />
+              <Field
+                type="password"
+                name="password"
+                id="password"
+                label="Password:"
+                validate={validatePassword}
+                component={CustomInputComponent}
+              />
+              <CustomButton type="submit">Sign In</CustomButton>
+              <SeparatorContainer>
+                <Separator />
+                <SeparatorText>OR</SeparatorText>
+                <Separator />
+              </SeparatorContainer>
+              <SignUpLink to="/sign-up/">Sign Up</SignUpLink>
+            </Form>
+          )}
+        />
+      </FormContainer>
+    </Container>
+  );
+};
+
+export default SignIn;

@@ -1,19 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 
 import img from "../../public/images/beauti-1.jpg";
 
 import media from "../../utils/media";
-import {
-  COOL_GREY,
-  DARK_GREY,
-  SILVER_GREY,
-  WHITE,
-  WHITE_GREY,
-  BLACK
-} from "../../utils/colors";
 
+import ButtonLink from "../../components/button/button-link";
 import PageWrapper from "../../components/page-wrapper/page-wrapper";
 import CustomNav from "../../components/custom-nav/custom-nav";
 import { Header, SubHeader } from "../../components/typography/typography";
@@ -63,17 +55,7 @@ const ButtonContainer = styled.div`
   `};
 `;
 
-const CustomButtonLink = styled(Link)`
-  align-items: center;
-  background: ${WHITE};
-  border-radius: 0.5rem;
-  color: ${BLACK};
-  display: flex;
-  justify-content: center;
-  height: 3.5rem;
-  width: 100%;
-  font-size: 1.5rem;
-
+const CustomButtonLink = styled(ButtonLink)`
   ${media.small`
     border-radius: 1rem;
     height: 4rem;
@@ -82,26 +64,8 @@ const CustomButtonLink = styled(Link)`
 
   ${media.large`
     font-size: 2rem;
-    height: 4rem;
     width: 16rem;
   `};
-
-  &:hover {
-    background: ${SILVER_GREY};
-    cursor: ${props => (props.disabled ? "cursor" : "pointer")};
-    transition: all 0.3s ease;
-  }
-
-  &:active {
-    background: ${DARK_GREY};
-    outline: none;
-  }
-
-  &:disabled {
-    background-color: ${SILVER_GREY};
-    color: ${COOL_GREY};
-    box-shadow: none;
-  }
 `;
 
 const SignInButton = styled(CustomButtonLink)`

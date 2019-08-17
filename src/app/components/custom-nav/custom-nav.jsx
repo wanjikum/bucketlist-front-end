@@ -19,7 +19,7 @@ const CustomNav = () => {
   return (
     <div>
       <Navbar color="light" light expand="md">
-        <NavbarBrand href="#">Bucketlist</NavbarBrand>
+        <NavbarBrand href="/">Bucketlist</NavbarBrand>
         <NavbarToggler onClick={handleClick} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ml-auto" navbar>
