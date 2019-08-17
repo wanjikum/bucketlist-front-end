@@ -122,7 +122,7 @@ const HomePage = () => (
           You can create online bucketlists that keeps track of your life goals.
         </BucketlistSubHeader>
         <ButtonContainer>
-          <CustomButtonLink to="/sign-up/">Register</CustomButtonLink>
+          <CustomButtonLink to="/sign-up/">Sign Up</CustomButtonLink>
           <SignInButton to="/sign-in/">Sign In</SignInButton>
         </ButtonContainer>
       </ContentContainer>
