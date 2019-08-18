@@ -111,13 +111,14 @@ const initialValues = {
   password: ""
 };
 
-const handleSubmit = values => {
+const handleSubmit = history => values => {
   setTimeout(() => {
     alert(JSON.stringify(values, null, 2));
+    history.push("/bucketlists/");
   }, 1000);
 };
 
-const SignIn = () => {
+const SignIn = ({ history }) => {
   return (
     <Container>
       <CustomNav />
@@ -125,7 +126,7 @@ const SignIn = () => {
         <Header>Sign In With Bucketlists</Header>
         <Formik
           initialValues={initialValues}
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(history)}
           render={props => {
             console.log(">>>>props", props.values);
             return (

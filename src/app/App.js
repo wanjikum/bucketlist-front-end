@@ -10,12 +10,15 @@ const Container = styled.div`
   width: 100%;
 `;
 
+const Welcome = () => <div>Hello there!!</div>;
+
 const App = () => (
   <Container>
     <Router>
       <Route path="/" exact component={HomePage} />
       <Route path="/sign-up/" component={SignUp} />
       <Route path="/sign-in/" component={SignIn} />
+      <Route path="/bucketlists/" component={Welcome} />
     </Router>
   </Container>
 );

@@ -124,7 +124,7 @@ const validateConfirmPassword = currentPassword => value => {
   return error;
 };
 
-const SignIn = () => {
+const SignIn = ({ history }) => {
   return (
     <Container>
       <CustomNav />
