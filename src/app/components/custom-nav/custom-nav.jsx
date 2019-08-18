@@ -16,6 +16,7 @@ const CustomNav = () => {
     setIsOpen(!isOpen);
   };
 
+  // use Link instead of HREF
   return (
     <div>
       <Navbar color="light" light expand="md">
@@ -24,7 +25,7 @@ const CustomNav = () => {
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ml-auto" navbar>
             <NavItem>
-              <NavLink href="sign-in/">Sign In</NavLink>
+              <NavLink href="/sign-in/">Sign In</NavLink>
             </NavItem>
             <NavItem>
               <NavLink href="/sign-up/">Sign Up</NavLink>

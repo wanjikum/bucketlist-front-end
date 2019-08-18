@@ -126,33 +126,36 @@ const SignIn = () => {
         <Formik
           initialValues={initialValues}
           onSubmit={handleSubmit}
-          render={props => (
-            <Form onSubmit={props.handleSubmit}>
-              <Field
-                type="email"
-                name="email"
-                id="email"
-                label="Email:"
-                validate={validateEmail}
-                component={CustomInputComponent}
-              />
-              <Field
-                type="password"
-                name="password"
-                id="password"
-                label="Password:"
-                validate={validatePassword}
-                component={CustomInputComponent}
-              />
-              <CustomButton type="submit">Sign In</CustomButton>
-              <SeparatorContainer>
-                <Separator />
-                <SeparatorText>OR</SeparatorText>
-                <Separator />
-              </SeparatorContainer>
-              <SignUpLink to="/sign-up/">Sign Up</SignUpLink>
-            </Form>
-          )}
+          render={props => {
+            console.log(">>>>props", props.values);
+            return (
+              <Form onSubmit={props.handleSubmit}>
+                <Field
+                  type="email"
+                  name="email"
+                  id="email"
+                  label="Email:"
+                  validate={validateEmail}
+                  component={CustomInputComponent}
+                />
+                <Field
+                  type="password"
+                  name="password"
+                  id="password"
+                  label="Password:"
+                  validate={validatePassword}
+                  component={CustomInputComponent}
+                />
+                <CustomButton type="submit">Sign In</CustomButton>
+                <SeparatorContainer>
+                  <Separator />
+                  <SeparatorText>OR</SeparatorText>
+                  <Separator />
+                </SeparatorContainer>
+                <SignUpLink to="/sign-up/">Sign Up</SignUpLink>
+              </Form>
+            );
+          }}
         />
       </FormContainer>
     </Container>

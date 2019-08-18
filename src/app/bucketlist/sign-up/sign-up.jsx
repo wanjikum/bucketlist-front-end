@@ -1,59 +1,59 @@
 import React from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Form } from "reactstrap";
+import { Formik, Field } from "formik";
 import styled from "styled-components";
-import {
-  Button,
-  Form as ReactstrapForm,
-  FormGroup,
-  Label,
-  Input,
-  Col
-} from "reactstrap";
+import { Link } from "react-router-dom";
+
+import media from "../../utils/media";
+import { SILVER_GREY, WHITE_GREY, BLUE } from "../../utils/colors";
+
 import img from "../../public/images/beauti-1.jpg";
+
+import Button from "../../components/button/button";
+import CustomNav from "../../components/custom-nav/custom-nav";
+import CustomInputComponent from "../../components/custom-input/custom-input";
 
 const Container = styled.div`
   height: 100vh;
   width: 100%;
   display: flex;
+  flex-direction: column;
+
+  ${media.small`
+    background-image: url(${img});
+    background-size: cover;  
+  `};
 `;
 
-const Header = styled.h1`
-  color: black;
+const FormContainer = styled.div`
+  margin-top: 1rem;
+  padding: 1.5rem;
+
+  ${media.small`
+    align-self: center;
+    border: 1px solid ${SILVER_GREY};
+    margin-top: 4rem;
+    padding: 2.5rem;
+    width: 40rem;
+    background: ${WHITE_GREY};
+  `};
+`;
+
+const Header = styled.h3`
+  margin-bottom: 1rem;
+`;
+
+const CustomButton = styled(Button)`
+  height: 3rem;
+  font-size: 1rem;
 `;
 
 const SubHeader = styled.h5`
-  color: black;
-`;
-
-const FieldWrapper = styled.div`
-  margin-bottom: 0.5rem;
-`;
-
-const InputLabel = styled(Label)`
-  color: black;
-`;
-
-const ErrorMessageWrapper = styled.div`
   margin-bottom: 1rem;
-  color: red;
 `;
 
-const Container1 = styled.div`
-  flex: 1;
-  background-image: url(${img});
-  background-size: cover;
-`;
-
-const Container2 = styled.div`
-  flex: 1;
-  background: white;
-  padding: 2.5rem;
-`;
-
-const ButtonWrapper = styled(Button)`
-  margin-left: 1rem;
-  color: white;
-  background: white;
+const SignInLink = styled(Link)`
+  color: ${BLUE};
 `;
 
 const initialValues = {
@@ -124,113 +124,70 @@ const validateConfirmPassword = currentPassword => value => {
   return error;
 };
 
-const App = () => {
+const SignIn = () => {
   return (
     <Container>
-      <Container1>This is the image</Container1>
-      <Container2>
+      <CustomNav />
+      <FormContainer>
         <Header>Sign up</Header>
-        <SubHeader>Already a member? Sign in here</SubHeader>
-        <Formik initialValues={initialValues} onSubmit={handleSubmit}>
-          {({ values, errors }) => {
-            console.log("matches>>>>", values);
+        <SubHeader>
+          Already a member? <SignInLink to="/sign-in">Sign in here</SignInLink>
+        </SubHeader>
+        <Formik
+          initialValues={initialValues}
+          onSubmit={handleSubmit}
+          render={props => {
+            console.log(">>>>props", props.values);
             return (
-              <ReactstrapForm>
-                <Form>
-                  <FormGroup>
-                    <InputLabel for="firstName" sm={2}>
-                      First Name:
-                    </InputLabel>
-                    <Col md={6}>
-                      <Field
-                        name="firstName"
-                        validate={validateName}
-                        component={Input}
-                        id="firstName"
-                      />
-                    </Col>
-                    <ErrorMessageWrapper>
-                      <ErrorMessage name="firstName" />
-                    </ErrorMessageWrapper>
-                  </FormGroup>
-                  <FormGroup>
-                    <FieldWrapper>
-                      <InputLabel for="lastName" sm={2}>
-                        Last Name:
-                      </InputLabel>
-                      <Col md={6}>
-                        <Field
-                          name="lastName"
-                          id="lastName"
-                          validate={validateName}
-                          component={Input}
-                        />
-                      </Col>
-                    </FieldWrapper>
-                    <ErrorMessageWrapper>
-                      <ErrorMessage name="lastName" />
-                    </ErrorMessageWrapper>
-                  </FormGroup>
-                  <FormGroup>
-                    <FieldWrapper>
-                      <InputLabel sm={2}>Email:</InputLabel>
-                      <Col md={6}>
-                        <Field
-                          name="email"
-                          validate={validateEmail}
-                          component={Input}
-                        />
-                      </Col>
-                    </FieldWrapper>
-                    <ErrorMessageWrapper>
-                      <ErrorMessage name="email" />
-                    </ErrorMessageWrapper>
-                  </FormGroup>
-                  <FormGroup>
-                    <FieldWrapper>
-                      <InputLabel sm={2}>Password:</InputLabel>
-                      <Col md={6}>
-                        <Field
-                          name="password"
-                          type="password"
-                          validate={validatePassword}
-                          component={Input}
-                        />
-                      </Col>
-                    </FieldWrapper>
-                    <ErrorMessageWrapper>
-                      <ErrorMessage name="password" />
-                    </ErrorMessageWrapper>
-                  </FormGroup>
-                  <FormGroup>
-                    <FieldWrapper>
-                      <InputLabel sm={6}>Confirm Password:</InputLabel>
-                      <Col md={6}>
-                        <Field
-                          name="confirmPassword"
-                          type="password"
-                          validate={validateConfirmPassword(values.password)}
-                          component={Input}
-                        />
-                      </Col>
-                    </FieldWrapper>
-                    <ErrorMessageWrapper>
-                      <ErrorMessage name="confirmPassword" />
-                    </ErrorMessageWrapper>
-                  </FormGroup>
-                  <ButtonWrapper>
-                    <Button type="submit" size="lg" outline color="secondary">
-                      Create Account
-                    </Button>
-                  </ButtonWrapper>
-                </Form>
-              </ReactstrapForm>
+              <Form onSubmit={props.handleSubmit}>
+                <Field
+                  type="firstName"
+                  name="firstName"
+                  id="firstName"
+                  label="First Name:"
+                  validate={validateName}
+                  component={CustomInputComponent}
+                />
+                <Field
+                  type="lastName"
+                  name="lastName"
+                  id="lastName"
+                  label="Last Name:"
+                  validate={validateName}
+                  component={CustomInputComponent}
+                />
+                <Field
+                  type="email"
+                  name="email"
+                  id="email"
+                  label="Email:"
+                  validate={validateEmail}
+                  component={CustomInputComponent}
+                />
+                <Field
+                  type="password"
+                  name="password"
+                  id="password"
+                  label="Password:"
+                  validate={validatePassword}
+                  component={CustomInputComponent}
+                />
+                <Field
+                  type="password"
+                  name="confirmPassword"
+                  id="confirmPassword"
+                  label="Confirm Password:"
+                  validate={validateConfirmPassword(props.values.password)}
+                  component={CustomInputComponent}
+                />
+                <CustomButton type="submit">Create An Account</CustomButton>
+              </Form>
             );
           }}
-        </Formik>
-      </Container2>
+        />
+      </FormContainer>
     </Container>
   );
 };
 
-export default App;
+export default SignIn;
