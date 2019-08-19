@@ -1,5 +1,5 @@
 import React from "react";
-import { FormGroup, Label, Input, FormFeedback } from "reactstrap";
+import { FormGroup, Label, Input, FormFeedback, CustomInput } from "reactstrap";
 
 const CustomInputComponent = ({
   field, // { name, value, onChange, onBlur }
@@ -22,6 +22,17 @@ const CustomInputComponent = ({
       <FormFeedback>{errors[field.name]}</FormFeedback>
     </FormGroup>
   );
+};
+
+export const CustomRadioComponent = ({
+  field, // { name, value, onChange, onBlur }
+  form, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
+  children,
+  check,
+  inputText,
+  ...props
+}) => {
+  return <CustomInput {...field} {...props} />;
 };
 
 export default CustomInputComponent;

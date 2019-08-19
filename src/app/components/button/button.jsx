@@ -41,6 +41,10 @@ const Button = styled.button`
     color: ${COOL_GREY};
     box-shadow: none;
   }
+
+  &:focus {
+    outline: none;
+  }
 `;
 
 export default Button;

@@ -6,6 +6,7 @@ export const BLUE = "#0070BA";
 
 // Secondary colours
 export const CHERRY_RED = "#D40021";
+export const PINK_RED = "#DC3545";
 export const DARK_GREY = "#1F2122";
 export const GREY = "#58595B";
 export const STEEL_GREY = "#778286";

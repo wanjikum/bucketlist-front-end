@@ -46,6 +46,7 @@ const Header = styled.h3`
 const CustomButton = styled(Button)`
   height: 3rem;
   font-size: 1rem;
+  margin-top: 2rem;
 `;
 
 const SubHeader = styled.h5`
@@ -64,9 +65,10 @@ const initialValues = {
   confirmPassword: ""
 };
 
-const handleSubmit = values => {
+const handleSubmit = history => values => {
   setTimeout(() => {
     alert(JSON.stringify(values, null, 2));
+    history.push("/bucketlists/");
   }, 1000);
 };
 
@@ -124,6 +126,7 @@ const validateConfirmPassword = currentPassword => value => {
   return error;
 };
 
+// Add cancel button
 const SignIn = ({ history }) => {
   return (
     <Container>
@@ -135,7 +138,7 @@ const SignIn = ({ history }) => {
         </SubHeader>
         <Formik
           initialValues={initialValues}
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(history)}
           render={props => {
             console.log(">>>>props", props.values);
             return (

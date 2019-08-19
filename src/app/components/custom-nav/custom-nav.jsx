@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { Fragment, useState } from "react";
 import {
   Collapse,
   Navbar,
@@ -9,27 +9,37 @@ import {
   NavLink
 } from "reactstrap";
 
-const CustomNav = () => {
+const CustomNav = ({ isUserVerified }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClick = () => {
     setIsOpen(!isOpen);
   };
-
   // use Link instead of HREF
+  //
   return (
     <div>
       <Navbar color="light" light expand="md">
-        <NavbarBrand href="/">Bucketlist</NavbarBrand>
+        <NavbarBrand href={isUserVerified ? "/bucketlists/" : "/"}>
+          {isUserVerified ? "Dashboard" : "Bucketlists"}
+        </NavbarBrand>
         <NavbarToggler onClick={handleClick} />
         <Collapse isOpen={isOpen} navbar>
           <Nav className="ml-auto" navbar>
-            <NavItem>
-              <NavLink href="/sign-in/">Sign In</NavLink>
-            </NavItem>
-            <NavItem>
-              <NavLink href="/sign-up/">Sign Up</NavLink>
-            </NavItem>
+            {isUserVerified ? (
+              <NavItem>
+                <NavLink href="/log-out/">Log out</NavLink>
+              </NavItem>
+            ) : (
+              <Fragment>
+                <NavItem>
+                  <NavLink href="/sign-in/">Sign In</NavLink>
+                </NavItem>
+                <NavItem>
+                  <NavLink href="/sign-up/">Sign Up</NavLink>
+                </NavItem>
+              </Fragment>
+            )}
           </Nav>
         </Collapse>
       </Navbar>
