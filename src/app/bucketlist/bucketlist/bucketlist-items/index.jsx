@@ -42,6 +42,7 @@ const BucketlistItemsTable = ({ handleView, bucketlistsItems }) => {
     <Table bordered responsive hover>
       <thead>
         <tr>
+          <th>#</th>
           <th>Bucketlist Item</th>
           <th>Status</th>
           <th>Actions</th>
@@ -50,6 +51,7 @@ const BucketlistItemsTable = ({ handleView, bucketlistsItems }) => {
       <tbody>
         {bucketlistsItems.map((item, index) => (
           <tr key={index}>
+            <td>{index + 1}</td>
             <CapitilizedTableData>{item.name}</CapitilizedTableData>
             <CapitilizedTableData>{item.status}</CapitilizedTableData>
             <td>
