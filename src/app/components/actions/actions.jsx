@@ -28,6 +28,11 @@ const Actions = ({
     console.log(">>>>>>>>", bucketlistIndex);
     handleView(bucketlistIndex);
   };
+
+  const handlePencilClick = () => {
+    console.log(">>>>>>>>", bucketlistIndex);
+    handleEdit(bucketlistIndex);
+  };
   return (
     <ActionsIcons>
       {canView && (
@@ -35,7 +40,7 @@ const Actions = ({
           <ViewIcon />
         </div>
       )}
-      <div onClick={handleEdit}>
+      <div onClick={handlePencilClick}>
         <FaPencilAlt />
       </div>
       <div onClick={handleDelete}>

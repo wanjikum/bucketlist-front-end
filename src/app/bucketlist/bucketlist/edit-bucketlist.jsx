@@ -33,12 +33,6 @@ const ErrorMessageWrapper = styled.div`
   margin-top: ${props => (props.hasError ? "-0.5rem" : 0)};
 `;
 
-const initialValues = {
-  name: "",
-  status: "",
-  description: ""
-};
-
 const validateBucketlistName = value => {
   let error;
   if (!value) {
@@ -90,22 +84,16 @@ const renderFormFeedback = (touched, errors) => {
   return false;
 };
 
-const AddBucketlist = () => {
-  const [isModalOpen, setIsModalOpenFlag] = useState(false);
-
-  const handleToggle = () => setIsModalOpenFlag(!isModalOpen);
-
+const EditBucketlist = ({ isModalOpen, handleToggle, bucketlistDetails }) => {
+  console.log(">>>>>", isModalOpen);
   return (
     <div>
-      <CustomButton type="button" onClick={handleToggle}>
-        Add A Bucketlist
-      </CustomButton>
       <Modal isOpen={isModalOpen} toggle={handleToggle}>
         <ModalHeader toggle={handleToggle} charCode="X">
           Create A Bucketlist
         </ModalHeader>
         <Formik
-          initialValues={initialValues}
+          initialValues={bucketlistDetails}
           onSubmit={handleSubmit(handleToggle)}
           render={props => {
             console.log(">>>>props", props.values);
@@ -135,6 +123,7 @@ const AddBucketlist = () => {
                       label="To do"
                       validate={validateStatus}
                       component={CustomRadioComponent}
+                      checked={props.values.status === "to do"}
                     />
 
                     <Field
@@ -145,6 +134,7 @@ const AddBucketlist = () => {
                       label="In Progress"
                       validate={validateStatus}
                       component={CustomRadioComponent}
+                      checked={props.values.status === "in progress"}
                     />
                     <Field
                       type="radio"
@@ -154,6 +144,7 @@ const AddBucketlist = () => {
                       label="Done"
                       validate={validateStatus}
                       component={CustomRadioComponent}
+                      checked={props.values.status === "done"}
                     />
                   </FormGroup>
                   <FormGroup>
@@ -188,4 +179,4 @@ const AddBucketlist = () => {
   );
 };
 
-export default AddBucketlist;
+export default EditBucketlist;
