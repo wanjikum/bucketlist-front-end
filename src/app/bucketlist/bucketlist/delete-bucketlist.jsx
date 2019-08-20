@@ -41,7 +41,8 @@ const DeleteBucketlist = ({
           Delete A {isBucketlistItem ? "Bucketlist Item" : "Bucketlist"}
         </ModalHeader>
         <ModalBody>
-          Do you want to delete bucketlist with bucketlist name{" "}
+          Do you want to delete{" "}
+          {isBucketlistItem ? "bucketlist item" : "bucketlist"} with the name{" "}
           {<b>{bucketlistDetails.name}</b>}?
         </ModalBody>
         <ModalFooter>

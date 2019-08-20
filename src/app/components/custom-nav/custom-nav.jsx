@@ -28,7 +28,7 @@ const CustomNav = ({ isUserVerified }) => {
           <Nav className="ml-auto" navbar>
             {isUserVerified ? (
               <NavItem>
-                <NavLink href="/log-out/">Log out</NavLink>
+                <NavLink href="/">Log out</NavLink>
               </NavItem>
             ) : (
               <Fragment>
