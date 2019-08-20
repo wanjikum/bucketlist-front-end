@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Table } from "reactstrap";
 import styled from "styled-components";
 import MediaQuery from "react-responsive";
@@ -9,6 +9,7 @@ import { SILVER_GREY, WHITE_GREY, WHITE } from "../../utils/colors";
 import Actions from "../../components/actions/actions";
 import CustomNav from "../../components/custom-nav/custom-nav";
 import AddBucketlist from "./add-bucketlist";
+import EditBucketlist from "./edit-bucketlist";
 
 const Container = styled.div`
   height: 100vh;
@@ -38,7 +39,7 @@ const CapitilizedTableData = styled.td`
   text-transform: capitalize;
 `;
 
-const TableMobile = ({ handleView, bucketlists }) => {
+const TableMobile = ({ handleView, bucketlists, handleEdit }) => {
   return (
     <Table bordered responsive hover>
       <thead>
@@ -54,7 +55,11 @@ const TableMobile = ({ handleView, bucketlists }) => {
             <CapitilizedTableData>{item.name}</CapitilizedTableData>
             <CapitilizedTableData>{item.status}</CapitilizedTableData>
             <td>
-              <Actions handleView={handleView} bucketlistIndex={index} />
+              <Actions
+                handleView={handleView}
+                bucketlistIndex={index}
+                handleEdit={handleEdit}
+              />
             </td>
           </tr>
         ))}
@@ -63,7 +68,7 @@ const TableMobile = ({ handleView, bucketlists }) => {
   );
 };
 
-const DesktopMobile = ({ handleView, bucketlists }) => {
+const DesktopMobile = ({ handleView, bucketlists, handleEdit }) => {
   return (
     <Table bordered responsive hover>
       <thead>
@@ -83,7 +88,11 @@ const DesktopMobile = ({ handleView, bucketlists }) => {
             <td>{item.description}</td>
             <CapitilizedTableData>{item.status}</CapitilizedTableData>
             <td>
-              <Actions handleView={handleView} bucketlistIndex={index} />
+              <Actions
+                handleView={handleView}
+                bucketlistIndex={index}
+                handleEdit={handleEdit}
+              />
             </td>
           </tr>
         ))}
@@ -112,6 +121,9 @@ const Bucketlist = ({ history, match }) => {
     }
   ];
 
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [bucketlistDetails, setBucketlistDetails] = useState(false);
+
   const handleView = bucketlistIndex => {
     // remember to fetch data
     // remember to use `/bucketlist/${bucketlistIndex}/bucketlist-item`
@@ -121,18 +133,43 @@ const Bucketlist = ({ history, match }) => {
     history.push(`/bucketlist-item/`);
   };
 
+  const handleToggle = () => setEditModalOpen(!isEditModalOpen);
+
+  const handleEdit = bucketlistIndex => {
+    // render modal
+    console.log("Hello niko kwa handleEdit", bucketlistIndex);
+    handleToggle();
+    setBucketlistDetails(bucketlists[bucketlistIndex]);
+    console.log("niko kwa function ya parent");
+  };
+
   return (
     <Container>
       <CustomNav isUserVerified />
       <FormContainer>
         <AddBucketlist />
         <MediaQuery maxDeviceWidth={767}>
-          <TableMobile handleView={handleView} bucketlists={bucketlists} />
+          <TableMobile
+            handleView={handleView}
+            bucketlists={bucketlists}
+            handleEdit={handleEdit}
+          />
         </MediaQuery>
         <MediaQuery minDeviceWidth={768}>
-          <DesktopMobile handleView={handleView} bucketlists={bucketlists} />
+          <DesktopMobile
+            handleView={handleView}
+            bucketlists={bucketlists}
+            handleEdit={handleEdit}
+          />
         </MediaQuery>
       </FormContainer>
+      {isEditModalOpen && (
+        <EditBucketlist
+          isModalOpen={isEditModalOpen}
+          handleToggle={handleToggle}
+          bucketlistDetails={bucketlistDetails}
+        />
+      )}
     </Container>
   );
 };
