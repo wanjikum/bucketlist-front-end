@@ -9,6 +9,7 @@ import Actions from "../../../components/actions/actions";
 import CustomNav from "../../../components/custom-nav/custom-nav";
 import AddBucketlists from "./add-bucketlist-item";
 import EditBucketlistItem from "./edit-bucketlist-item";
+import DeleteBucketlist from "../delete-bucketlist";
 
 const Container = styled.div`
   height: 100vh;
@@ -38,7 +39,12 @@ const CapitilizedTableData = styled.td`
   text-transform: capitalize;
 `;
 
-const BucketlistItemsTable = ({ handleView, handleEdit, bucketlistsItems }) => {
+const BucketlistItemsTable = ({
+  handleView,
+  handleEdit,
+  bucketlistsItems,
+  handleDelete
+}) => {
   return (
     <Table bordered responsive hover>
       <thead>
@@ -59,6 +65,7 @@ const BucketlistItemsTable = ({ handleView, handleEdit, bucketlistsItems }) => {
               <Actions
                 handleView={handleView}
                 handleEdit={handleEdit}
+                handleDelete={handleDelete}
                 bucketlistIndex={index}
                 canView={false}
               />
@@ -88,14 +95,22 @@ const BucketlistItem = ({ history, bucketlistData, match }) => {
   ];
 
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [bucketlistItemDetails, setBucketlistItemDetails] = useState({});
 
-  const handleToggle = () => setEditModalOpen(!isEditModalOpen);
+  const handleEditToggle = () => setEditModalOpen(!isEditModalOpen);
+  const handleDeleteToggle = () => setDeleteModalOpen(!isDeleteModalOpen);
 
-  const handleEdit = bucketlistId => {
-    console.log("Niko kwa handleEdit", bucketlistId);
-    setEditModalOpen(true);
-    setBucketlistItemDetails(bucketlistsItems[bucketlistId]);
+  const handleEdit = bucketlistItemId => {
+    console.log("Niko kwa handleEdit", bucketlistItemId);
+    handleEditToggle();
+    setBucketlistItemDetails(bucketlistsItems[bucketlistItemId]);
+  };
+
+  const handleDelete = bucketlistItemId => {
+    console.log("Hello niko kwa handleDelete", bucketlistItemId);
+    setBucketlistItemDetails(bucketlistsItems[bucketlistItemId]);
+    handleDeleteToggle();
   };
 
   return (
@@ -106,12 +121,21 @@ const BucketlistItem = ({ history, bucketlistData, match }) => {
         <BucketlistItemsTable
           bucketlistsItems={bucketlistsItems}
           handleEdit={handleEdit}
+          handleDelete={handleDelete}
         />
         {isEditModalOpen && (
           <EditBucketlistItem
             isModalOpen={isEditModalOpen}
-            handleToggle={handleToggle}
+            handleToggle={handleEditToggle}
             bucketlistDetails={bucketlistItemDetails}
+          />
+        )}
+        {isDeleteModalOpen && (
+          <DeleteBucketlist
+            isModalOpen={isDeleteModalOpen}
+            handleToggle={handleDeleteToggle}
+            bucketlistDetails={bucketlistItemDetails}
+            isBucketlistItem
           />
         )}
       </FormContainer>

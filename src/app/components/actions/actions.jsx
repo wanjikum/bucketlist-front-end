@@ -33,6 +33,11 @@ const Actions = ({
     console.log(">>>>>>>>", bucketlistIndex);
     handleEdit(bucketlistIndex);
   };
+
+  const handleDeleteIconClick = () => {
+    console.log(">>>>>>>>>", bucketlistIndex);
+    handleDelete(bucketlistIndex);
+  };
   return (
     <ActionsIcons>
       {canView && (
@@ -43,7 +48,7 @@ const Actions = ({
       <div onClick={handlePencilClick}>
         <FaPencilAlt />
       </div>
-      <div onClick={handleDelete}>
+      <div onClick={handleDeleteIconClick}>
         <DeleteIcon />
       </div>
     </ActionsIcons>
