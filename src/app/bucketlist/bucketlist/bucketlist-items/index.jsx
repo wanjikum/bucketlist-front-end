@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Table } from "reactstrap";
 import styled from "styled-components";
 
@@ -8,6 +8,7 @@ import { SILVER_GREY, WHITE_GREY, WHITE } from "../../../utils/colors";
 import Actions from "../../../components/actions/actions";
 import CustomNav from "../../../components/custom-nav/custom-nav";
 import AddBucketlists from "./add-bucketlist-item";
+import EditBucketlistItem from "./edit-bucketlist-item";
 
 const Container = styled.div`
   height: 100vh;
@@ -37,7 +38,7 @@ const CapitilizedTableData = styled.td`
   text-transform: capitalize;
 `;
 
-const BucketlistItemsTable = ({ handleView, bucketlistsItems }) => {
+const BucketlistItemsTable = ({ handleView, handleEdit, bucketlistsItems }) => {
   return (
     <Table bordered responsive hover>
       <thead>
@@ -57,6 +58,7 @@ const BucketlistItemsTable = ({ handleView, bucketlistsItems }) => {
             <td>
               <Actions
                 handleView={handleView}
+                handleEdit={handleEdit}
                 bucketlistIndex={index}
                 canView={false}
               />
@@ -85,12 +87,33 @@ const BucketlistItem = ({ history, bucketlistData, match }) => {
     }
   ];
 
+  const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [bucketlistItemDetails, setBucketlistItemDetails] = useState({});
+
+  const handleToggle = () => setEditModalOpen(!isEditModalOpen);
+
+  const handleEdit = bucketlistId => {
+    console.log("Niko kwa handleEdit", bucketlistId);
+    setEditModalOpen(true);
+    setBucketlistItemDetails(bucketlistsItems[bucketlistId]);
+  };
+
   return (
     <Container>
       <CustomNav isUserVerified />
       <FormContainer>
         <AddBucketlists />
-        <BucketlistItemsTable bucketlistsItems={bucketlistsItems} />
+        <BucketlistItemsTable
+          bucketlistsItems={bucketlistsItems}
+          handleEdit={handleEdit}
+        />
+        {isEditModalOpen && (
+          <EditBucketlistItem
+            isModalOpen={isEditModalOpen}
+            handleToggle={handleToggle}
+            bucketlistDetails={bucketlistItemDetails}
+          />
+        )}
       </FormContainer>
     </Container>
   );
