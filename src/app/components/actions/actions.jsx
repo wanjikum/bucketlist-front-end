@@ -17,12 +17,36 @@ const DeleteIcon = styled(FaTrashAlt)`
   color: ${CHERRY_RED};
 `;
 
-const Actions = ({ handleEdit, handleDelete, handleView }) => (
-  <ActionsIcons>
-    <ViewIcon onClick={handleView} />
-    <FaPencilAlt onClick={handleEdit} />
-    <DeleteIcon onClick={handleDelete} />
-  </ActionsIcons>
-);
+const Actions = ({
+  handleEdit,
+  handleDelete,
+  handleView,
+  canView,
+  bucketlistIndex
+}) => {
+  const handleEyeClick = () => {
+    console.log(">>>>>>>>", bucketlistIndex);
+    handleView(bucketlistIndex);
+  };
+  return (
+    <ActionsIcons>
+      {canView && (
+        <div onClick={handleEyeClick}>
+          <ViewIcon />
+        </div>
+      )}
+      <div onClick={handleEdit}>
+        <FaPencilAlt />
+      </div>
+      <div onClick={handleDelete}>
+        <DeleteIcon />
+      </div>
+    </ActionsIcons>
+  );
+};
+
+Actions.defaultProps = {
+  canView: true
+};
 
 export default Actions;

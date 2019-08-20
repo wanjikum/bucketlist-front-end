@@ -92,7 +92,7 @@ const validateName = value => {
     error = "Required";
   } else if (!/^[a-zA-Z ]+$/.test(value)) {
     error = "Invalid Name";
-  } else if (value.length < 2) {
+  } else if (value.length < 3) {
     error = "Name too short";
   } else if (value.length >= 15) {
     error = "Name too long";
