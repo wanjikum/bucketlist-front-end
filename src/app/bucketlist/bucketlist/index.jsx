@@ -10,6 +10,7 @@ import Actions from "../../components/actions/actions";
 import CustomNav from "../../components/custom-nav/custom-nav";
 import AddBucketlist from "./add-bucketlist";
 import EditBucketlist from "./edit-bucketlist";
+import DeleteBucketlist from "./delete-bucketlist";
 
 const Container = styled.div`
   height: 100vh;
@@ -39,7 +40,7 @@ const CapitilizedTableData = styled.td`
   text-transform: capitalize;
 `;
 
-const TableMobile = ({ handleView, bucketlists, handleEdit }) => {
+const TableMobile = ({ handleView, bucketlists, handleEdit, handleDelete }) => {
   return (
     <Table bordered responsive hover>
       <thead>
@@ -59,6 +60,7 @@ const TableMobile = ({ handleView, bucketlists, handleEdit }) => {
                 handleView={handleView}
                 bucketlistIndex={index}
                 handleEdit={handleEdit}
+                handleDelete={handleDelete}
               />
             </td>
           </tr>
@@ -68,7 +70,12 @@ const TableMobile = ({ handleView, bucketlists, handleEdit }) => {
   );
 };
 
-const DesktopMobile = ({ handleView, bucketlists, handleEdit }) => {
+const DesktopMobile = ({
+  handleView,
+  bucketlists,
+  handleEdit,
+  handleDelete
+}) => {
   return (
     <Table bordered responsive hover>
       <thead>
@@ -92,6 +99,7 @@ const DesktopMobile = ({ handleView, bucketlists, handleEdit }) => {
                 handleView={handleView}
                 bucketlistIndex={index}
                 handleEdit={handleEdit}
+                handleDelete={handleDelete}
               />
             </td>
           </tr>
@@ -122,6 +130,7 @@ const Bucketlist = ({ history, match }) => {
   ];
 
   const [isEditModalOpen, setEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [bucketlistDetails, setBucketlistDetails] = useState({});
 
   const handleView = bucketlistIndex => {
@@ -133,14 +142,21 @@ const Bucketlist = ({ history, match }) => {
     history.push(`/bucketlist-item/`);
   };
 
-  const handleToggle = () => setEditModalOpen(!isEditModalOpen);
+  const handleEditToggle = () => setEditModalOpen(!isEditModalOpen);
+  const handleDeleteToggle = () => setDeleteModalOpen(!isDeleteModalOpen);
 
   const handleEdit = bucketlistIndex => {
     // render modal
     console.log("Hello niko kwa handleEdit", bucketlistIndex);
-    handleToggle();
+    handleEditToggle();
     setBucketlistDetails(bucketlists[bucketlistIndex]);
     console.log("niko kwa function ya parent");
+  };
+
+  const handleDelete = bucketlistIndex => {
+    console.log("Hello niko kwa handleDelete", bucketlistIndex);
+    setBucketlistDetails(bucketlists[bucketlistIndex]);
+    handleDeleteToggle();
   };
 
   return (
@@ -153,6 +169,7 @@ const Bucketlist = ({ history, match }) => {
             handleView={handleView}
             bucketlists={bucketlists}
             handleEdit={handleEdit}
+            handleDelete={handleDelete}
           />
         </MediaQuery>
         <MediaQuery minDeviceWidth={768}>
@@ -160,13 +177,21 @@ const Bucketlist = ({ history, match }) => {
             handleView={handleView}
             bucketlists={bucketlists}
             handleEdit={handleEdit}
+            handleDelete={handleDelete}
           />
         </MediaQuery>
       </FormContainer>
       {isEditModalOpen && (
         <EditBucketlist
           isModalOpen={isEditModalOpen}
-          handleToggle={handleToggle}
+          handleToggle={handleEditToggle}
+          bucketlistDetails={bucketlistDetails}
+        />
+      )}
+      {isDeleteModalOpen && (
+        <DeleteBucketlist
+          isModalOpen={isDeleteModalOpen}
+          handleToggle={handleDeleteToggle}
           bucketlistDetails={bucketlistDetails}
         />
       )}
