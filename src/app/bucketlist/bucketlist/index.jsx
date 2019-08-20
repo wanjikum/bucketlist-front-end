@@ -122,7 +122,7 @@ const Bucketlist = ({ history, match }) => {
   ];
 
   const [isEditModalOpen, setEditModalOpen] = useState(false);
-  const [bucketlistDetails, setBucketlistDetails] = useState(false);
+  const [bucketlistDetails, setBucketlistDetails] = useState({});
 
   const handleView = bucketlistIndex => {
     // remember to fetch data
