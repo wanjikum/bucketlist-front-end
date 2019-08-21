@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form } from "reactstrap";
 import { Formik, Field } from "formik";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
+import request from "superagent";
 
 import media from "../../utils/media";
-import { SILVER_GREY, WHITE_GREY, BLUE } from "../../utils/colors";
+import { SILVER_GREY, WHITE_GREY, BLUE, PINK_RED } from "../../utils/colors";
 
 import img from "../../public/images/beauti-1.jpg";
+import AuthContext from "../auth";
+import baseUrl from "../../base-url";
 
 import Button from "../../components/button/button";
 import CustomNav from "../../components/custom-nav/custom-nav";
@@ -57,6 +60,11 @@ const SignInLink = styled(Link)`
   color: ${BLUE};
 `;
 
+const ErrorLabel = styled.h3`
+  color: ${PINK_RED};
+  font-size: 1rem;
+`;
+
 const initialValues = {
   firstName: "",
   lastName: "",
@@ -65,11 +73,34 @@ const initialValues = {
   confirmPassword: ""
 };
 
-const handleSubmit = history => values => {
-  setTimeout(() => {
-    alert(JSON.stringify(values, null, 2));
-    history.push("/bucketlists/");
-  }, 1000);
+const handleSubmit = ({
+  history,
+  handleAuthDataChange,
+  setIsLoading,
+  setHasError
+}) => async values => {
+  const url = `${baseUrl}api/v1/auth/signup`;
+  const { confirmPassword, ...rest } = values;
+  try {
+    setIsLoading(true);
+    const payload = await request
+      .post(url)
+      .send(rest)
+      .set("Accept", "application/json");
+
+    const { body } = payload;
+    setIsLoading(false);
+    if (body.success) {
+      handleAuthDataChange({
+        token: body.userData.token,
+        success: body.success
+      });
+      history.push("/bucketlists/");
+    }
+  } catch (e) {
+    setIsLoading(false);
+    setHasError(true);
+  }
 };
 
 const validateEmail = value => {
@@ -121,13 +152,16 @@ const validateConfirmPassword = currentPassword => value => {
   } else if (value.length >= 15) {
     error = "Password too long";
   } else if (value !== currentPassword) {
-    error = "Passwords do not much";
+    error = "Password does not much";
   }
   return error;
 };
 
 // Add cancel button
-const SignIn = ({ history }) => {
+const SignUp = ({ history }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
   return (
     <Container>
       <CustomNav />
@@ -136,61 +170,79 @@ const SignIn = ({ history }) => {
         <SubHeader>
           Already a member? <SignInLink to="/sign-in">Sign in here</SignInLink>
         </SubHeader>
-        <Formik
-          initialValues={initialValues}
-          onSubmit={handleSubmit(history)}
-          render={props => {
-            console.log(">>>>props", props.values);
-            return (
-              <Form onSubmit={props.handleSubmit}>
-                <Field
-                  type="firstName"
-                  name="firstName"
-                  id="firstName"
-                  label="First Name:"
-                  validate={validateName}
-                  component={CustomInputComponent}
-                />
-                <Field
-                  type="lastName"
-                  name="lastName"
-                  id="lastName"
-                  label="Last Name:"
-                  validate={validateName}
-                  component={CustomInputComponent}
-                />
-                <Field
-                  type="email"
-                  name="email"
-                  id="email"
-                  label="Email:"
-                  validate={validateEmail}
-                  component={CustomInputComponent}
-                />
-                <Field
-                  type="password"
-                  name="password"
-                  id="password"
-                  label="Password:"
-                  validate={validatePassword}
-                  component={CustomInputComponent}
-                />
-                <Field
-                  type="password"
-                  name="confirmPassword"
-                  id="confirmPassword"
-                  label="Confirm Password:"
-                  validate={validateConfirmPassword(props.values.password)}
-                  component={CustomInputComponent}
-                />
-                <CustomButton type="submit">Create An Account</CustomButton>
-              </Form>
-            );
-          }}
-        />
+        <AuthContext.Consumer>
+          {({ authData, handleAuthDataChange }) => (
+            <Formik
+              initialValues={initialValues}
+              onSubmit={handleSubmit({
+                history,
+                handleAuthDataChange,
+                setIsLoading,
+                setHasError
+              })}
+              render={props => {
+                console.log(">>>>props", props.values);
+                return (
+                  <Form onSubmit={props.handleSubmit}>
+                    <Field
+                      type="firstName"
+                      name="firstName"
+                      id="firstName"
+                      label="First Name:"
+                      validate={validateName}
+                      component={CustomInputComponent}
+                    />
+                    <Field
+                      type="lastName"
+                      name="lastName"
+                      id="lastName"
+                      label="Last Name:"
+                      validate={validateName}
+                      component={CustomInputComponent}
+                    />
+                    <Field
+                      type="email"
+                      name="email"
+                      id="email"
+                      label="Email:"
+                      validate={validateEmail}
+                      component={CustomInputComponent}
+                    />
+                    <Field
+                      type="password"
+                      name="password"
+                      id="password"
+                      label="Password:"
+                      validate={validatePassword}
+                      component={CustomInputComponent}
+                    />
+                    <Field
+                      type="password"
+                      name="confirmPassword"
+                      id="confirmPassword"
+                      label="Confirm Password:"
+                      validate={validateConfirmPassword(props.values.password)}
+                      component={CustomInputComponent}
+                    />
+                    {hasError && (
+                      <ErrorLabel>
+                        Please click the below button again
+                      </ErrorLabel>
+                    )}
+                    <CustomButton type="submit" disabled={props.isSubmitting}>
+                      {isLoading
+                        ? "Creating an Account..."
+                        : "Create An Account"}
+                    </CustomButton>
+                  </Form>
+                );
+              }}
+            />
+          )}
+        </AuthContext.Consumer>
       </FormContainer>
     </Container>
   );
 };
 
-export default SignIn;
+export default SignUp;
