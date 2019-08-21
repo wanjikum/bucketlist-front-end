@@ -1,12 +1,20 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import { Form } from "reactstrap";
 import { Formik, Field } from "formik";
 import styled from "styled-components";
+import request from "superagent";
 
 import media from "../../utils/media";
-import { COOL_GREY, SILVER_GREY, WHITE_GREY } from "../../utils/colors";
+import {
+  COOL_GREY,
+  SILVER_GREY,
+  WHITE_GREY,
+  PINK_RED
+} from "../../utils/colors";
 
 import img from "../../public/images/beauti-1.jpg";
+import baseUrl from "../../base-url";
+import AuthContext from "../auth";
 
 import Button from "../../components/button/button";
 import CustomNav from "../../components/custom-nav/custom-nav";
@@ -80,6 +88,11 @@ const SignUpLink = styled(ButtonLink)`
   `};
 `;
 
+const ErrorLabel = styled.h3`
+  color: ${PINK_RED};
+  font-size: 1rem;
+`;
+
 const validateEmail = value => {
   let error;
   if (!value) {
@@ -111,14 +124,40 @@ const initialValues = {
   password: ""
 };
 
-const handleSubmit = history => values => {
-  setTimeout(() => {
-    alert(JSON.stringify(values, null, 2));
-    history.push("/bucketlists/");
-  }, 1000);
+const handleSubmit = ({
+  history,
+  handleAuthDataChange,
+  setIsLoading,
+  setHasError
+}) => async values => {
+  const url = `${baseUrl}api/v1/auth/signin`;
+  try {
+    setIsLoading(true);
+    const payload = await request
+      .post(url)
+      .send(values)
+      .set("Accept", "application/json");
+
+    const { body } = payload;
+    setIsLoading(false);
+    if (body.success) {
+      handleAuthDataChange({
+        token: body.userData.token,
+        success: body.success
+      });
+      history.push("/bucketlists/");
+    }
+  } catch (e) {
+    setIsLoading(false);
+    setHasError(true);
+  }
 };
 
 const SignIn = ({ history }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const { handleAuthDataChange } = useContext(AuthContext);
+
   return (
     <Container>
       <CustomNav />
@@ -126,11 +165,15 @@ const SignIn = ({ history }) => {
         <Header>Sign In With Bucketlists</Header>
         <Formik
           initialValues={initialValues}
-          onSubmit={handleSubmit(history)}
-          render={props => {
-            console.log(">>>>props", props.values);
+          onSubmit={handleSubmit({
+            history,
+            setIsLoading,
+            setHasError,
+            handleAuthDataChange
+          })}
+          render={({ handleSubmit, isSubmitting }) => {
             return (
-              <Form onSubmit={props.handleSubmit}>
+              <Form onSubmit={handleSubmit}>
                 <Field
                   type="email"
                   name="email"
@@ -147,7 +190,12 @@ const SignIn = ({ history }) => {
                   validate={validatePassword}
                   component={CustomInputComponent}
                 />
-                <CustomButton type="submit">Sign In</CustomButton>
+                {hasError && (
+                  <ErrorLabel>Please click the below button again</ErrorLabel>
+                )}
+                <CustomButton type="submit" disabled={isSubmitting}>
+                  {isLoading ? "Signing In..." : "Sign In"}
+                </CustomButton>
                 <SeparatorContainer>
                   <Separator />
                   <SeparatorText>OR</SeparatorText>
