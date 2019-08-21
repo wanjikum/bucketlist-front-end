@@ -157,7 +157,6 @@ const validateConfirmPassword = currentPassword => value => {
   return error;
 };
 
-// Add cancel button
 const SignUp = ({ history }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -171,7 +170,7 @@ const SignUp = ({ history }) => {
           Already a member? <SignInLink to="/sign-in">Sign in here</SignInLink>
         </SubHeader>
         <AuthContext.Consumer>
-          {({ authData, handleAuthDataChange }) => (
+          {({ handleAuthDataChange }) => (
             <Formik
               initialValues={initialValues}
               onSubmit={handleSubmit({
@@ -180,10 +179,9 @@ const SignUp = ({ history }) => {
                 setIsLoading,
                 setHasError
               })}
-              render={props => {
-                console.log(">>>>props", props.values);
+              render={({ handleSubmit, isSubmitting, values }) => {
                 return (
-                  <Form onSubmit={props.handleSubmit}>
+                  <Form onSubmit={handleSubmit}>
                     <Field
                       type="firstName"
                       name="firstName"
@@ -221,7 +219,7 @@ const SignUp = ({ history }) => {
                       name="confirmPassword"
                       id="confirmPassword"
                       label="Confirm Password:"
-                      validate={validateConfirmPassword(props.values.password)}
+                      validate={validateConfirmPassword(values.password)}
                       component={CustomInputComponent}
                     />
                     {hasError && (
@@ -229,7 +227,7 @@ const SignUp = ({ history }) => {
                         Please click the below button again
                       </ErrorLabel>
                     )}
-                    <CustomButton type="submit" disabled={props.isSubmitting}>
+                    <CustomButton type="submit" disabled={isSubmitting}>
                       {isLoading
                         ? "Creating an Account..."
                         : "Create An Account"}
