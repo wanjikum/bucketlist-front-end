@@ -2,12 +2,10 @@ import styled from "styled-components";
 
 import media from "../../utils/media";
 import {
-  COOL_GREY,
   DARK_GREY,
   BLACK,
   WHITE_GREY,
-  BLUE,
-  SILVER_GREY
+  BLUE
 } from "../../utils/colors";
 
 const Button = styled.button`
@@ -37,8 +35,8 @@ const Button = styled.button`
   }
 
   &:disabled {
-    background-color: ${SILVER_GREY};
-    color: ${COOL_GREY};
+    background-color: ${WHITE_GREY};
+    color: ${BLACK};
     box-shadow: none;
   }
 
