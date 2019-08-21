@@ -1,12 +1,7 @@
 import styled from "styled-components";
 
 import media from "../../utils/media";
-import {
-  DARK_GREY,
-  BLACK,
-  WHITE_GREY,
-  BLUE
-} from "../../utils/colors";
+import { DARK_GREY, BLACK, WHITE_GREY, BLUE } from "../../utils/colors";
 
 const Button = styled.button`
   align-items: center;
@@ -35,8 +30,7 @@ const Button = styled.button`
   }
 
   &:disabled {
-    background-color: ${WHITE_GREY};
-    color: ${BLACK};
+    opacity: 0.7;
     box-shadow: none;
   }
 
