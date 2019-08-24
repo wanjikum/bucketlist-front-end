@@ -11,21 +11,18 @@ import {
   Alert
 } from "reactstrap";
 import { Formik, Field, ErrorMessage } from "formik";
+import request from "superagent";
 
 import Button from "../../components/button/button";
 import CustomInputComponent, {
   CustomRadioComponent
 } from "../../components/custom-input/custom-input";
+
 import { CHERRY_RED, BLUE, PINK_RED } from "../../utils/colors";
+import { setHeaders } from "../../utils/useFetchable";
 
 import baseUrl from "../../base-url";
 import AuthContext from "../auth";
-import request from "superagent";
-
-const setHeaders = token => ({
-  Authorization: `Bearer ${token}`,
-  Accept: "application/json"
-});
 
 const CustomButton = styled(Button)`
   height: 3rem;
@@ -148,7 +145,6 @@ const AddBucketlist = () => {
             token: authData.token
           })}
           render={props => {
-            console.log(">>>>props", props.values);
             return (
               <Form onSubmit={props.handleSubmit}>
                 <ModalBody>
