@@ -1,34 +1,42 @@
-import React, { useState } from "react";
-import { Table } from "reactstrap";
+import React, { useState, useContext, Fragment } from "react";
+import { Table, Alert } from "reactstrap";
 import styled from "styled-components";
 import MediaQuery from "react-responsive";
+// import request from "superagent";
 
 import media from "../../utils/media";
+import useFetchable from "../../utils/useFetchable";
 import { SILVER_GREY, WHITE_GREY, WHITE } from "../../utils/colors";
 
 import Actions from "../../components/actions/actions";
 import CustomNav from "../../components/custom-nav/custom-nav";
+
+import baseUrl from "../../base-url";
+import AuthContext from "../auth";
+
 import AddBucketlist from "./add-bucketlist";
 import EditBucketlist from "./edit-bucketlist";
 import DeleteBucketlist from "./delete-bucketlist";
 
 const Container = styled.div`
-  height: 100vh;
-  width: 100%;
+  background: ${WHITE};
   display: flex;
   flex-direction: column;
-  background: ${WHITE};
+  height: 100vh;
+  width: 100%;
 `;
 
 const FormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   margin-top: 0.5rem;
 
   ${media.small`
     align-self: center;
+    background: ${WHITE_GREY};
     border: 1px solid ${SILVER_GREY};
     margin-top: 4rem;
     padding: 2.5rem;
-    background: ${WHITE_GREY};
   `};
 
   ${media.small`
@@ -110,24 +118,17 @@ const DesktopMobile = ({
 };
 
 const Bucketlist = ({ history, match }) => {
-  // console.log("openCreateBucketlistModal", openCreateBucketlistModal);
-  const bucketlists = [
-    {
-      name: "Go to Nairobi",
-      status: "done",
-      description: "Visit all the parks near nairobi"
-    },
-    {
-      name: "Go to Kitale",
-      status: "in progress",
-      description: "Visit some of the maize farms"
-    },
-    {
-      name: "Go to Kakamega",
-      status: "to do",
-      description: "Visit the crying stone"
-    }
-  ];
+  const uri = `${baseUrl}api/v1/bucketlists/`;
+  const { authData } = useContext(AuthContext);
+
+  const [data, hasError, isLoading] = useFetchable({
+    uri,
+    token: authData.token
+  });
+
+  console.log(">>>data>>>", data);
+  console.log(">>>hasError>>>", hasError);
+  console.log(">>>isLoading>>>", isLoading);
 
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -136,7 +137,7 @@ const Bucketlist = ({ history, match }) => {
   const handleView = bucketlistIndex => {
     // remember to fetch data
     // remember to use `/bucketlist/${bucketlistIndex}/bucketlist-item`
-    const bucketlistData = bucketlists[bucketlistIndex];
+    const bucketlistData = data.bucketListData[bucketlistIndex];
     console.log("nimeclickiwa", bucketlistData, bucketlistIndex);
     // history.push(`${match.url}/${bucketlistIndex}/bucketlist-item/`);
     history.push(`/bucketlist-item/`);
@@ -149,13 +150,13 @@ const Bucketlist = ({ history, match }) => {
     // render modal
     console.log("Hello niko kwa handleEdit", bucketlistIndex);
     handleEditToggle();
-    setBucketlistDetails(bucketlists[bucketlistIndex]);
+    setBucketlistDetails(data.bucketListData[bucketlistIndex]);
     console.log("niko kwa function ya parent");
   };
 
   const handleDelete = bucketlistIndex => {
     console.log("Hello niko kwa handleDelete", bucketlistIndex);
-    setBucketlistDetails(bucketlists[bucketlistIndex]);
+    setBucketlistDetails(data.bucketListData[bucketlistIndex]);
     handleDeleteToggle();
   };
 
@@ -164,22 +165,28 @@ const Bucketlist = ({ history, match }) => {
       <CustomNav isUserVerified />
       <FormContainer>
         <AddBucketlist />
-        <MediaQuery maxDeviceWidth={767}>
-          <TableMobile
-            handleView={handleView}
-            bucketlists={bucketlists}
-            handleEdit={handleEdit}
-            handleDelete={handleDelete}
-          />
-        </MediaQuery>
-        <MediaQuery minDeviceWidth={768}>
-          <DesktopMobile
-            handleView={handleView}
-            bucketlists={bucketlists}
-            handleEdit={handleEdit}
-            handleDelete={handleDelete}
-          />
-        </MediaQuery>
+        {data && data.bucketListData.length !== 0 ? (
+          <Fragment>
+            <MediaQuery maxDeviceWidth={767}>
+              <TableMobile
+                handleView={handleView}
+                bucketlists={data.bucketListData}
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
+              />
+            </MediaQuery>
+            <MediaQuery minDeviceWidth={768}>
+              <DesktopMobile
+                handleView={handleView}
+                bucketlists={data.bucketListData}
+                handleEdit={handleEdit}
+                handleDelete={handleDelete}
+              />
+            </MediaQuery>
+          </Fragment>
+        ) : (
+          <Alert color="secondary">No bucketlists available</Alert>
+        )}
       </FormContainer>
       {isEditModalOpen && (
         <EditBucketlist
