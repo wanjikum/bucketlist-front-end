@@ -195,7 +195,10 @@ const Bucketlist = ({ history, match }) => {
         <DeleteBucketlist
           isModalOpen={isDeleteModalOpen}
           handleToggle={handleDeleteToggle}
-          bucketlistDetails={bucketlistDetails}
+          bucketlistDetails={{
+            id: bucketlistDetails._id,
+            name: bucketlistDetails.name
+          }}
         />
       )}
     </Container>
