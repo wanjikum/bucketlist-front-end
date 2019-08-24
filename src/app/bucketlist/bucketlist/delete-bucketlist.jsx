@@ -29,7 +29,8 @@ const DeleteBucketlist = ({
   isModalOpen,
   handleToggle,
   bucketlistDetails,
-  isBucketlistItem
+  isBucketlistItem,
+  setFetchFlag
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -49,6 +50,7 @@ const DeleteBucketlist = ({
         const { body } = payload;
         setIsLoading(false);
         if (body.success) {
+          setFetchFlag(true);
           handleToggle();
         }
       } catch (e) {

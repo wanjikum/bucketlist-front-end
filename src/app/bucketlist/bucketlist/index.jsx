@@ -1,4 +1,4 @@
-import React, { useState, useContext, Fragment } from "react";
+import React, { useState, useContext, Fragment, useEffect } from "react";
 import { Table, Alert } from "reactstrap";
 import styled from "styled-components";
 import MediaQuery from "react-responsive";
@@ -119,10 +119,20 @@ const DesktopMobile = ({
 const Bucketlist = ({ history, match }) => {
   const uri = `${baseUrl}api/v1/bucketlists/`;
   const { authData } = useContext(AuthContext);
+  const [fetchFlag, setFetchFlag] = useState(true);
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [hasError, setHasError] = useState(false);
+
+  // useEffect(() => {
+  //   // setFetchFlag(true);
+  //   fetchBucketlists();
+  // }, []);
 
   const [data, hasError, isLoading] = useFetchable({
     uri,
-    token: authData.token
+    token: authData.token,
+    fetchFlag,
+    setFetchFlag
   });
 
   console.log(">>>data>>>", data);
@@ -160,7 +170,7 @@ const Bucketlist = ({ history, match }) => {
     <Container>
       <CustomNav isUserVerified />
       <FormContainer>
-        <AddBucketlist />
+        <AddBucketlist setFetchFlag={setFetchFlag}/>
         {data && data.bucketListData.length !== 0 ? (
           <Fragment>
             <MediaQuery maxDeviceWidth={767}>
@@ -189,6 +199,7 @@ const Bucketlist = ({ history, match }) => {
           isModalOpen={isEditModalOpen}
           handleToggle={handleEditToggle}
           bucketlistDetails={bucketlistDetails}
+          setFetchFlag={setFetchFlag}
         />
       )}
       {isDeleteModalOpen && (
@@ -199,6 +210,7 @@ const Bucketlist = ({ history, match }) => {
             id: bucketlistDetails._id,
             name: bucketlistDetails.name
           }}
+          setFetchFlag={setFetchFlag}
         />
       )}
     </Container>

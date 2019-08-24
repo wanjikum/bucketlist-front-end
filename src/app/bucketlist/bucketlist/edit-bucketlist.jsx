@@ -80,6 +80,7 @@ const handleSubmit = ({
   setIsLoading,
   setHasError,
   handleToggle,
+  setFetchFlag,
   token
 }) => async ({ _id: id, __v: v, ...rest }) => {
   const url = `${baseUrl}api/v1/bucketlists/${id}`;
@@ -95,6 +96,7 @@ const handleSubmit = ({
     const { body } = payload;
     setIsLoading(false);
     if (body.success) {
+      setFetchFlag(true);
       handleToggle();
     }
   } catch (e) {
@@ -110,7 +112,12 @@ const renderFormFeedback = (touched, errors) => {
   return false;
 };
 
-const EditBucketlist = ({ isModalOpen, handleToggle, bucketlistDetails }) => {
+const EditBucketlist = ({
+  isModalOpen,
+  handleToggle,
+  bucketlistDetails,
+  setFetchFlag
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
   const { authData } = useContext(AuthContext);
@@ -128,7 +135,8 @@ const EditBucketlist = ({ isModalOpen, handleToggle, bucketlistDetails }) => {
             setIsLoading,
             setHasError,
             token: authData.token,
-            id: bucketlistDetails._id
+            id: bucketlistDetails._id,
+            setFetchFlag
           })}
           render={props => {
             return (
