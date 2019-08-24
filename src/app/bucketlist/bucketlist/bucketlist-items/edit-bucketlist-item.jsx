@@ -1,4 +1,6 @@
-import React from "react";
+import React, { useContext, useState } from "react";
+import request from "superagent";
+
 import styled from "styled-components";
 import {
   Modal,
@@ -7,7 +9,8 @@ import {
   ModalFooter,
   Form,
   FormGroup,
-  Label
+  Label,
+  Alert
 } from "reactstrap";
 import { Formik, Field, ErrorMessage } from "formik";
 
@@ -15,7 +18,13 @@ import Button from "../../../components/button/button";
 import CustomInputComponent, {
   CustomRadioComponent
 } from "../../../components/custom-input/custom-input";
+
 import { CHERRY_RED, BLUE, PINK_RED } from "../../../utils/colors";
+
+import AuthContext from "../../auth";
+import baseUrl from "../../../base-url";
+
+import { setHeaders } from "../../../utils/useFetchable";
 
 const CustomButton = styled(Button)`
   height: 3rem;
@@ -55,12 +64,39 @@ const validateStatus = value => {
   return error;
 };
 
-const handleSubmit = handleToggle => values => {
-  setTimeout(() => {
-    // alert(JSON.stringify(values, null, 2));
-    console.log("niko na values>>>>>", values);
-    handleToggle();
-  }, 1000);
+const handleSubmit = ({
+  setIsLoading,
+  setHasError,
+  handleToggle,
+  setFetchFlag,
+  token
+}) => async ({
+  _id: bucketlistItemId,
+  bucketlistId,
+  userId,
+  __v: v,
+  ...rest
+}) => {
+  const uri = `${baseUrl}api/v1/bucketlists/${bucketlistId}/bucketlistItems/${bucketlistItemId}`;
+
+  try {
+    setIsLoading(true);
+    setHasError(false);
+    const payload = await request
+      .put(uri)
+      .set(setHeaders(token))
+      .send(rest);
+
+    const { body } = payload;
+    setIsLoading(false);
+    if (body.success) {
+      setFetchFlag(true);
+      handleToggle();
+    }
+  } catch (e) {
+    setIsLoading(false);
+    setHasError(true);
+  }
 };
 
 const renderFormFeedback = (touched, errors) => {
@@ -70,17 +106,33 @@ const renderFormFeedback = (touched, errors) => {
   return false;
 };
 
-const EditBucketlist = ({ isModalOpen, handleToggle, bucketlistDetails }) => {
-  console.log(">>>>>", isModalOpen);
+const EditBucketlist = ({
+  isModalOpen,
+  handleToggle,
+  bucketlistItemDetails,
+  setFetchFlag
+}) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
+  const { authData } = useContext(AuthContext);
+
+  console.log("bucketlistDetails", bucketlistItemDetails._id);
+
   return (
     <div>
       <Modal isOpen={isModalOpen} toggle={handleToggle}>
         <ModalHeader toggle={handleToggle} charCode="X">
-          Create A Bucketlist
+          Edit A Bucketlist Item
         </ModalHeader>
         <Formik
-          initialValues={bucketlistDetails}
-          onSubmit={handleSubmit(handleToggle)}
+          initialValues={bucketlistItemDetails}
+          onSubmit={handleSubmit({
+            handleToggle,
+            setIsLoading,
+            setHasError,
+            token: authData.token,
+            setFetchFlag
+          })}
           render={props => {
             console.log(">>>>props", props.values);
             return (
@@ -133,10 +185,13 @@ const EditBucketlist = ({ isModalOpen, handleToggle, bucketlistDetails }) => {
                       checked={props.values.status === "done"}
                     />
                   </FormGroup>
+                  {hasError && (
+                    <Alert color="danger">Please try again later</Alert>
+                  )}
                 </ModalBody>
                 <ModalFooter>
                   <CustomButton type="submit" onClick={handleSubmit}>
-                    Submit
+                    {isLoading ? "Submitting..." : "Submit"}
                   </CustomButton>{" "}
                   <CustomButton
                     type="button"
