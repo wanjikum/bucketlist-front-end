@@ -30,7 +30,8 @@ const DeleteBucketlist = ({
   handleToggle,
   bucketlistDetails,
   isBucketlistItem,
-  setFetchFlag
+  setFetchFlag,
+  bucketlistItemDetails
 }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -38,6 +39,24 @@ const DeleteBucketlist = ({
 
   const handleDelete = async () => {
     if (isBucketlistItem) {
+      const { bucketlistId, _id: bucketlistItemId } = bucketlistItemDetails;
+      const uri = `${baseUrl}api/v1/bucketlists/${bucketlistId}/bucketlistItems/${bucketlistItemId}`;
+
+      try {
+        setIsLoading(true);
+        setHasError(false);
+        const payload = await request.del(uri).set(setHeaders(authData.token));
+
+        const { body } = payload;
+        setIsLoading(false);
+        if (body.success) {
+          setFetchFlag(true);
+          handleToggle();
+        }
+      } catch (e) {
+        setIsLoading(false);
+        setHasError(true);
+      }
     } else {
       // not bucketlist item.
       const uri = `${baseUrl}api/v1/bucketlists/${bucketlistDetails.id}`;
@@ -70,7 +89,14 @@ const DeleteBucketlist = ({
           <Fragment>
             Do you want to delete{" "}
             {isBucketlistItem ? "bucketlist item" : "bucketlist"} with the name{" "}
-            {<b>{bucketlistDetails.name}</b>}?
+            {
+              <b>
+                {isBucketlistItem
+                  ? bucketlistItemDetails.name
+                  : bucketlistDetails.name}
+              </b>
+            }
+            ?
           </Fragment>
           {hasError && (
             <ErrorAlert color="danger">Please try again later</ErrorAlert>

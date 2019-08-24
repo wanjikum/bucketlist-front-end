@@ -30,7 +30,10 @@ const App = () => {
           <Route path="/sign-up/" component={SignUp} />
           <Route path="/sign-in/" component={SignIn} />
           <Route path="/bucketlists/" component={Bucketlist} />
-          <Route path="/bucketlist-item/" component={BucketlistItem} />
+          <Route
+            path="/bucketlist/:id/bucketlist-item/"
+            component={BucketlistItem}
+          />
         </AuthContext.Provider>
       </Router>
     </Container>

@@ -1,15 +1,20 @@
-import React, { useState } from "react";
-import { Table } from "reactstrap";
+import React, { useState, useContext } from "react";
+import { Table, Alert } from "reactstrap";
 import styled from "styled-components";
 
 import media from "../../../utils/media";
 import { SILVER_GREY, WHITE_GREY, WHITE } from "../../../utils/colors";
+import useFetchable from "../../../utils/useFetchable";
 
 import Actions from "../../../components/actions/actions";
 import CustomNav from "../../../components/custom-nav/custom-nav";
+
 import AddBucketlists from "./add-bucketlist-item";
 import EditBucketlistItem from "./edit-bucketlist-item";
 import DeleteBucketlist from "../delete-bucketlist";
+
+import baseUrl from "../../../base-url";
+import AuthContext from "../../auth";
 
 const Container = styled.div`
   height: 100vh;
@@ -20,6 +25,8 @@ const Container = styled.div`
 `;
 
 const FormContainer = styled.div`
+  display: flex;
+  flex-direction: column;
   margin-top: 0.5rem;
 
   ${media.small`
@@ -77,39 +84,37 @@ const BucketlistItemsTable = ({
   );
 };
 
-const BucketlistItem = ({ history, bucketlistData, match }) => {
+const BucketlistItem = ({ match }) => {
   console.log("match", match);
-  const bucketlistsItems = [
-    {
-      name: "Go to Nairobi",
-      status: "done"
-    },
-    {
-      name: "Go to Kitale",
-      status: "in progress"
-    },
-    {
-      name: "Go to Kakamega",
-      status: "to do"
-    }
-  ];
 
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [bucketlistItemDetails, setBucketlistItemDetails] = useState({});
+  const uri = `${baseUrl}api/v1/bucketlists/${match.params.id}/bucketlistItems/`;
+  const { authData } = useContext(AuthContext);
+  const [fetchFlag, setFetchFlag] = useState(true);
+
+  const [data, hasError, isLoading] = useFetchable({
+    uri,
+    token: authData.token,
+    fetchFlag,
+    setFetchFlag
+  });
+
+  console.log(">>>data>>>", data);
+  console.log(">>>hasError>>>", hasError);
+  console.log(">>>isLoading>>>", isLoading);
 
   const handleEditToggle = () => setEditModalOpen(!isEditModalOpen);
   const handleDeleteToggle = () => setDeleteModalOpen(!isDeleteModalOpen);
 
   const handleEdit = bucketlistItemId => {
-    console.log("Niko kwa handleEdit", bucketlistItemId);
     handleEditToggle();
-    setBucketlistItemDetails(bucketlistsItems[bucketlistItemId]);
+    setBucketlistItemDetails(data.bucketListItemData[bucketlistItemId]);
   };
 
   const handleDelete = bucketlistItemId => {
-    console.log("Hello niko kwa handleDelete", bucketlistItemId);
-    setBucketlistItemDetails(bucketlistsItems[bucketlistItemId]);
+    setBucketlistItemDetails(data.bucketListItemData[bucketlistItemId]);
     handleDeleteToggle();
   };
 
@@ -117,24 +122,34 @@ const BucketlistItem = ({ history, bucketlistData, match }) => {
     <Container>
       <CustomNav isUserVerified />
       <FormContainer>
-        <AddBucketlists />
-        <BucketlistItemsTable
-          bucketlistsItems={bucketlistsItems}
-          handleEdit={handleEdit}
-          handleDelete={handleDelete}
+        <AddBucketlists
+          setFetchFlag={setFetchFlag}
+          bucketlistId={match.params.id}
         />
+        {data && data.bucketListItemData.length !== 0 ? (
+          <BucketlistItemsTable
+            bucketlistsItems={data.bucketListItemData}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+            setFetchFlag={setFetchFlag}
+          />
+        ) : (
+          <Alert color="secondary">No bucketlists available</Alert>
+        )}
         {isEditModalOpen && (
           <EditBucketlistItem
             isModalOpen={isEditModalOpen}
             handleToggle={handleEditToggle}
-            bucketlistDetails={bucketlistItemDetails}
+            bucketlistItemDetails={bucketlistItemDetails}
+            setFetchFlag={setFetchFlag}
           />
         )}
         {isDeleteModalOpen && (
           <DeleteBucketlist
             isModalOpen={isDeleteModalOpen}
             handleToggle={handleDeleteToggle}
-            bucketlistDetails={bucketlistItemDetails}
+            bucketlistItemDetails={bucketlistItemDetails}
+            setFetchFlag={setFetchFlag}
             isBucketlistItem
           />
         )}
