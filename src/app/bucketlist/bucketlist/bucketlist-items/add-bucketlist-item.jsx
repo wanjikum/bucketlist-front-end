@@ -114,8 +114,6 @@ const AddBucketlistItem = ({ setFetchFlag, bucketlistId }) => {
     setIsModalOpenFlag(!isModalOpen);
   };
 
-  console.log("bucketlistId>>>>>", bucketlistId);
-
   return (
     <div>
       <CustomButton type="button" onClick={handleToggle}>
@@ -136,7 +134,6 @@ const AddBucketlistItem = ({ setFetchFlag, bucketlistId }) => {
             bucketlistId
           })}
           render={props => {
-            console.log(">>>>props", props.values);
             return (
               <Form onSubmit={props.handleSubmit}>
                 <ModalBody>
