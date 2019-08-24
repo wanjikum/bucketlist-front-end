@@ -2,7 +2,6 @@ import React, { useState, useContext, Fragment } from "react";
 import { Table, Alert } from "reactstrap";
 import styled from "styled-components";
 import MediaQuery from "react-responsive";
-// import request from "superagent";
 
 import media from "../../utils/media";
 import useFetchable from "../../utils/useFetchable";
@@ -147,11 +146,8 @@ const Bucketlist = ({ history, match }) => {
   const handleDeleteToggle = () => setDeleteModalOpen(!isDeleteModalOpen);
 
   const handleEdit = bucketlistIndex => {
-    // render modal
-    console.log("Hello niko kwa handleEdit", bucketlistIndex);
     handleEditToggle();
     setBucketlistDetails(data.bucketListData[bucketlistIndex]);
-    console.log("niko kwa function ya parent");
   };
 
   const handleDelete = bucketlistIndex => {

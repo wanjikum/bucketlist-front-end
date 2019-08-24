@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import request from "superagent";
 
-const setHeaders = token => ({
+export const setHeaders = token => ({
   Authorization: `Bearer ${token}`,
   Accept: "application/json"
 });
