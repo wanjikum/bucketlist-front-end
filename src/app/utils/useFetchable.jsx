@@ -6,7 +6,14 @@ export const setHeaders = token => ({
   Accept: "application/json"
 });
 
-function useFetchable({ uri, qs, method = "get", token }) {
+function useFetchable({
+  uri,
+  qs,
+  method = "get",
+  token,
+  fetchFlag,
+  setFetchFlag
+}) {
   const [response, setResponse] = React.useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
@@ -19,7 +26,7 @@ function useFetchable({ uri, qs, method = "get", token }) {
     }
 
     if (!didCancel) {
-      if (method === "get") {
+      if (method === "get" && fetchFlag) {
         request
           .get(uri)
           .query(qs)
@@ -27,12 +34,14 @@ function useFetchable({ uri, qs, method = "get", token }) {
           .then(res => {
             setIsLoading(false);
             setResponse(res.body);
+            setFetchFlag(false);
           })
           .catch(err => {
             setIsLoading(false);
             setHasError(true);
+            setFetchFlag(false);
           });
-      } else if (method === "post") {
+      } else if (method === "post" && fetchFlag) {
         request
           .post(uri)
           .send(qs)
@@ -40,16 +49,18 @@ function useFetchable({ uri, qs, method = "get", token }) {
           .then(res => {
             setIsLoading(false);
             setResponse(res.body);
+            setFetchFlag(false);
           })
           .catch(err => {
             setIsLoading(false);
             setHasError(true);
+            setFetchFlag(false);
           });
       }
     }
 
     return unsubscribe;
-  }, [method, qs, token, uri]);
+  }, [fetchFlag, method, qs, setFetchFlag, token, uri]);
 
   return [response, isLoading, hasError];
 }
