@@ -84,9 +84,7 @@ const BucketlistItemsTable = ({
   );
 };
 
-const BucketlistItem = ({ match }) => {
-  console.log("match", match);
-
+const BucketlistItem = ({ match, history }) => {
   const [isEditModalOpen, setEditModalOpen] = useState(false);
   const [isDeleteModalOpen, setDeleteModalOpen] = useState(false);
   const [bucketlistItemDetails, setBucketlistItemDetails] = useState({});
@@ -120,7 +118,7 @@ const BucketlistItem = ({ match }) => {
 
   return (
     <Container>
-      <CustomNav isUserVerified />
+      <CustomNav isUserVerified history={history} />
       <FormContainer>
         <AddBucketlists
           setFetchFlag={setFetchFlag}

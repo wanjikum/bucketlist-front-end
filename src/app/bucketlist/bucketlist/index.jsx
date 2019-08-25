@@ -150,14 +150,13 @@ const Bucketlist = ({ history, match }) => {
   };
 
   const handleDelete = bucketlistIndex => {
-    console.log("Hello niko kwa handleDelete", bucketlistIndex);
     setBucketlistDetails(data.bucketListData[bucketlistIndex]);
     handleDeleteToggle();
   };
 
   return (
     <Container>
-      <CustomNav isUserVerified />
+      <CustomNav isUserVerified history={history} />
       <FormContainer>
         <AddBucketlist setFetchFlag={setFetchFlag} />
         {data && data.bucketListData.length !== 0 ? (

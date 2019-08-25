@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useContext } from "react";
 import { NavLink as ReactRouterLink } from "react-router-dom";
 import {
   Collapse,
@@ -7,17 +7,25 @@ import {
   NavbarBrand,
   Nav,
   NavItem,
-  NavLink
+  NavLink,
+  Button
 } from "reactstrap";
 
-const CustomNav = ({ isUserVerified }) => {
+import AuthContext from "../../bucketlist/auth";
+
+const CustomNav = ({ isUserVerified, history }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const auth = useContext(AuthContext);
 
   const handleClick = () => {
     setIsOpen(!isOpen);
   };
-  // use Link instead of HREF
-  //
+
+  const handleLogOutButtonClick = e => {
+    auth.handleAuthDataChange({ success: false, token: "" });
+    history.push("/");
+  };
+
   return (
     <div>
       <Navbar color="light" light expand="md">
@@ -32,9 +40,13 @@ const CustomNav = ({ isUserVerified }) => {
           <Nav className="ml-auto" navbar>
             {isUserVerified ? (
               <NavItem>
-                <NavLink tag={ReactRouterLink} to="/">
+                <Button
+                  color="danger"
+                  type="button"
+                  onClick={handleLogOutButtonClick}
+                >
                   Log out
-                </NavLink>
+                </Button>
               </NavItem>
             ) : (
               <Fragment>
