@@ -6,6 +6,7 @@ const CustomInputComponent = ({
   form, // also values, setXXXX, handleXXXX, dirty, isValid, status, etc.
   label,
   children,
+  isInvalid,
   ...props
 }) => {
   const { touched, errors } = form;
@@ -16,7 +17,7 @@ const CustomInputComponent = ({
   return (
     <FormGroup>
       <Label for={field.name}>{label}</Label>
-      <Input valid={valid} invalid={invalid} {...field} {...props}>
+      <Input valid={valid} invalid={invalid || isInvalid} {...field} {...props}>
         {children}
       </Input>
       <FormFeedback>{errors[field.name]}</FormFeedback>

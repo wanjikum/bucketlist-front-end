@@ -1,16 +1,11 @@
 import React, { useState, useContext } from "react";
-import { Form } from "reactstrap";
+import { Alert, Form } from "reactstrap";
 import { Formik, Field } from "formik";
 import styled from "styled-components";
 import request from "superagent";
 
 import media from "../../utils/media";
-import {
-  COOL_GREY,
-  SILVER_GREY,
-  WHITE_GREY,
-  PINK_RED
-} from "../../utils/colors";
+import { COOL_GREY, SILVER_GREY, WHITE_GREY } from "../../utils/colors";
 
 import img from "../../public/images/beauti-1.jpg";
 import baseUrl from "../../base-url";
@@ -88,8 +83,7 @@ const SignUpLink = styled(ButtonLink)`
   `};
 `;
 
-const ErrorLabel = styled.h3`
-  color: ${PINK_RED};
+const ErrorLabel = styled(Alert)`
   font-size: 1rem;
 `;
 
@@ -128,11 +122,13 @@ const handleSubmit = ({
   history,
   handleAuthDataChange,
   setIsLoading,
-  setHasError
+  setHasError,
+  setStatus
 }) => async values => {
   const url = `${baseUrl}api/v1/auth/signin`;
   try {
     setIsLoading(true);
+    setStatus(null);
     const payload = await request
       .post(url)
       .send(values)
@@ -148,6 +144,7 @@ const handleSubmit = ({
       history.push("/bucketlists/");
     }
   } catch (e) {
+    setStatus(e.status);
     setIsLoading(false);
     setHasError(true);
   }
@@ -157,6 +154,7 @@ const SignIn = ({ history }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [hasError, setHasError] = useState(false);
   const { handleAuthDataChange } = useContext(AuthContext);
+  const [status, setStatus] = useState(null);
 
   return (
     <Container>
@@ -169,7 +167,8 @@ const SignIn = ({ history }) => {
             history,
             setIsLoading,
             setHasError,
-            handleAuthDataChange
+            handleAuthDataChange,
+            setStatus
           })}
           render={({ handleSubmit }) => {
             return (
@@ -181,6 +180,7 @@ const SignIn = ({ history }) => {
                   label="Email:"
                   validate={validateEmail}
                   component={CustomInputComponent}
+                  isInvalid={status === 401}
                 />
                 <Field
                   type="password"
@@ -189,9 +189,14 @@ const SignIn = ({ history }) => {
                   label="Password:"
                   validate={validatePassword}
                   component={CustomInputComponent}
+                  isInvalid={status === 401}
                 />
                 {hasError && (
-                  <ErrorLabel>Please click the below button again</ErrorLabel>
+                  <ErrorLabel color="danger">
+                    {status === 401
+                      ? "Please enter correct email or password"
+                      : "Please click the below button again"}
+                  </ErrorLabel>
                 )}
                 <CustomButton type="submit">
                   {isLoading ? "Signing In..." : "Sign In"}
