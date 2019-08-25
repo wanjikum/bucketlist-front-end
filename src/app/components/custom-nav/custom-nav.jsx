@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from "react";
+import { NavLink as ReactRouterLink } from "react-router-dom";
 import {
   Collapse,
   Navbar,
@@ -20,7 +21,10 @@ const CustomNav = ({ isUserVerified }) => {
   return (
     <div>
       <Navbar color="light" light expand="md">
-        <NavbarBrand href={isUserVerified ? "/bucketlists/" : "/"}>
+        <NavbarBrand
+          tag={ReactRouterLink}
+          to={isUserVerified ? "/bucketlists/" : "/"}
+        >
           {isUserVerified ? "Dashboard" : "Bucketlists"}
         </NavbarBrand>
         <NavbarToggler onClick={handleClick} />
@@ -28,15 +32,21 @@ const CustomNav = ({ isUserVerified }) => {
           <Nav className="ml-auto" navbar>
             {isUserVerified ? (
               <NavItem>
-                <NavLink href="/">Log out</NavLink>
+                <NavLink tag={ReactRouterLink} to="/">
+                  Log out
+                </NavLink>
               </NavItem>
             ) : (
               <Fragment>
                 <NavItem>
-                  <NavLink href="/sign-in/">Sign In</NavLink>
+                  <NavLink tag={ReactRouterLink} to="/sign-in/">
+                    Sign In
+                  </NavLink>
                 </NavItem>
                 <NavItem>
-                  <NavLink href="/sign-up/">Sign Up</NavLink>
+                  <NavLink tag={ReactRouterLink} to="/sign-up/">
+                    Sign Up
+                  </NavLink>
                 </NavItem>
               </Fragment>
             )}
