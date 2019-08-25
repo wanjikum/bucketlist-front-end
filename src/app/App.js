@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, Fragment } from "react";
 import styled from "styled-components";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import SignIn from "../app/bucketlist/sign-in/sign-in";
 import SignUp from "../app/bucketlist/sign-up/sign-up";
 import HomePage from "../app/bucketlist/home-page/home-page";
@@ -29,11 +29,17 @@ const App = () => {
           <Route path="/" exact component={HomePage} />
           <Route path="/sign-up/" component={SignUp} />
           <Route path="/sign-in/" component={SignIn} />
-          <Route path="/bucketlists/" component={Bucketlist} />
-          <Route
-            path="/bucketlist/:id/bucketlist-item/"
-            component={BucketlistItem}
-          />
+          {authInfo.success && authInfo.token ? (
+            <Fragment>
+              <Route path="/bucketlists/" component={Bucketlist} />
+              <Route
+                path="/bucketlist/:id/bucketlist-item/"
+                component={BucketlistItem}
+              />
+            </Fragment>
+          ) : (
+            <Redirect to={"/sign-in/"} />
+          )}
         </AuthContext.Provider>
       </Router>
     </Container>
