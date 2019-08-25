@@ -171,7 +171,7 @@ const SignIn = ({ history }) => {
             setHasError,
             handleAuthDataChange
           })}
-          render={({ handleSubmit, isSubmitting }) => {
+          render={({ handleSubmit }) => {
             return (
               <Form onSubmit={handleSubmit}>
                 <Field
@@ -193,7 +193,7 @@ const SignIn = ({ history }) => {
                 {hasError && (
                   <ErrorLabel>Please click the below button again</ErrorLabel>
                 )}
-                <CustomButton type="submit" disabled={isSubmitting}>
+                <CustomButton type="submit">
                   {isLoading ? "Signing In..." : "Sign In"}
                 </CustomButton>
                 <SeparatorContainer>
